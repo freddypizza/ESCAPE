@@ -1,7 +1,7 @@
 from pygame import *
 import random
 
-#  НАСТРОЙКА 
+# НАСТРОЙКА
 
 mixer.init()
 font.init()
@@ -20,7 +20,7 @@ FPS = 60
 
 game = True
 
-# КЛАССЫ 
+# КЛАССЫ
 
 class GameSprite(sprite.Sprite):
     def __init__(self, player_image, player_x, player_y, player_speed):
@@ -71,7 +71,7 @@ class Player(GameSprite):
         if keys[K_DOWN]:
             dy = self.speed
 
-        # X 
+        # X
 
         self.rect.x += dx
 
@@ -84,7 +84,7 @@ class Player(GameSprite):
                 if dx < 0:
                     self.rect.left = wall.rect.right
 
-        #  Y 
+        # Y
 
         self.rect.y += dy
 
@@ -97,7 +97,7 @@ class Player(GameSprite):
                 if dy < 0:
                     self.rect.top = wall.rect.bottom
 
-        #  НЕУЯЗВИМОСТЬ 
+        # НЕУЯЗВИМОСТЬ
 
         if self.invincible:
 
@@ -161,7 +161,7 @@ class Enemy(GameSprite):
                 if dx < 0:
                     self.rect.left = wall.rect.right
 
-        #  Y
+        # Y
 
         self.rect.y += dy
 
@@ -183,14 +183,16 @@ class Enemy(GameSprite):
 
 class Wall(sprite.Sprite):
 
-    def __init__(self,
-                 color_1,
-                 color_2,
-                 color_3,
-                 wall_x,
-                 wall_y,
-                 wall_width,
-                 wall_height):
+    def __init__(
+        self,
+        color_1,
+        color_2,
+        color_3,
+        wall_x,
+        wall_y,
+        wall_width,
+        wall_height
+    ):
 
         super().__init__()
 
@@ -232,7 +234,7 @@ class Trap(GameSprite):
             window.blit(self.image, (self.rect.x, self.rect.y))
 
 
-#  ЛАБИРИНТ 
+# ЛАБИРИНТ
 
 walls = []
 
@@ -279,11 +281,11 @@ for row_index, row in enumerate(maze_map):
                 )
             )
 
-# ИГРОК 
+# ИГРОК
 
 player = Player('hero.png', 50, 50, 3)
 
-#  МОНСТРЫ 
+# МОНСТРЫ
 
 enemy1 = Enemy('cyborg.png', 550, 70, 1)
 enemy2 = Enemy('cyborg.png', 550, 550, 1)
@@ -291,11 +293,11 @@ enemy3 = Enemy('cyborg.png', 70, 550, 1)
 
 enemies = [enemy1, enemy2, enemy3]
 
-#  СОКРОВИЩЕ 
+# СОКРОВИЩЕ
 
 treasure = GameSprite('treasure.png', 600, 600, 0)
 
-#  СЛУЧАЙНЫЕ ПОЗИЦИИ 
+# СЛУЧАЙНЫЕ ПОЗИЦИИ
 
 def get_random_position(
         walls_list,
@@ -341,7 +343,8 @@ def get_random_position(
 
     return 100, 100
 
-# МЕЧ 
+
+# МЕЧ
 
 used_positions = []
 
@@ -354,7 +357,7 @@ used_positions.append((sword_x, sword_y))
 
 sword = Sword(sword_x, sword_y)
 
-# ЛОВУШКИ 
+# ЛОВУШКИ
 
 traps = []
 
@@ -369,7 +372,7 @@ for _ in range(3):
 
     traps.append(Trap(trap_x, trap_y))
 
-#  ШРИФТЫ 
+# ШРИФТЫ
 
 main_font = font.SysFont('Arial', 70)
 small_font = font.SysFont('Arial', 25)
@@ -380,67 +383,7 @@ lose_text = main_font.render('YOU LOSE!', True, (255, 0, 0))
 finish = False
 victory = False
 
-#  РЕСТАРТ 
-
-def restart_game():
-
-    global finish
-    global victory
-    global traps
-
-    player.rect.x = 50
-    player.rect.y = 50
-
-    player.lives = 3
-    player.has_sword = False
-
-    enemy1.rect.x = 550
-    enemy1.rect.y = 70
-    enemy1.alive = True
-
-    enemy2.rect.x = 550
-    enemy2.rect.y = 550
-    enemy2.alive = True
-
-    enemy3.rect.x = 70
-    enemy3.rect.y = 550
-    enemy3.alive = True
-
-    used_positions = []
-
-    #  МЕЧ 
-
-    sword_x, sword_y = get_random_position_without_walls(
-        walls,
-        used_positions
-    )
-
-    used_positions.append((sword_x, sword_y))
-
-    sword.rect.x = sword_x
-    sword.rect.y = sword_y
-
-    sword.collected = False
-
-    # ЛОВУШКИ 
-
-    traps = []
-
-    for _ in range(3):
-
-        trap_x, trap_y = get_random_position_without_walls(
-            walls,
-            used_positions
-        )
-
-        used_positions.append((trap_x, trap_y))
-
-        traps.append(Trap(trap_x, trap_y))
-
-    finish = False
-    victory = False
-
-#  ИГРОВОЙ ЦИКЛ 
+# ИГРОВОЙ ЦИКЛ
 
 while game:
 
@@ -449,23 +392,18 @@ while game:
         if e.type == QUIT:
             game = False
 
-        if e.type == KEYDOWN:
-
-            if e.key == K_r:
-                restart_game()
-
     if not finish:
 
         window.blit(background, (0, 0))
 
-        #  ОБНОВЛЕНИЕ 
+        # ОБНОВЛЕНИЕ
 
         player.update(walls)
 
         for enemy in enemies:
             enemy.update(player, walls)
 
-        #  МЕЧ 
+        # МЕЧ
 
         if not sword.collected:
 
@@ -474,7 +412,7 @@ while game:
                 sword.collected = True
                 player.has_sword = True
 
-        #  ЛОВУШКИ 
+        # ЛОВУШКИ
 
         for trap in traps:
 
@@ -485,7 +423,7 @@ while game:
                     trap.triggered = True
                     player.take_damage()
 
-        #  МОНСТРЫ 
+        # МОНСТРЫ
 
         for enemy in enemies:
 
@@ -499,20 +437,21 @@ while game:
                     else:
                         player.take_damage()
 
-        #  ПОБЕДА 
+        # ПОБЕДА
 
         if sprite.collide_rect(player, treasure):
 
             finish = True
             victory = True
 
-        # ПОРАЖЕНИЕ 
+        # ПОРАЖЕНИЕ
+
         if player.lives <= 0:
 
             finish = True
             victory = False
 
-        # ОТРИСОВКА 
+        # ОТРИСОВКА
 
         for wall in walls:
             wall.draw_wall()
@@ -529,7 +468,7 @@ while game:
 
         player.reset()
 
-        # ТЕКСТ 
+        # ТЕКСТ
 
         lives_text = small_font.render(
             f'Lives: {player.lives}',
@@ -546,14 +485,6 @@ while game:
         )
 
         window.blit(sword_text, (10, 40))
-
-        restart_text = small_font.render(
-            'Press R to restart',
-            True,
-            (200, 200, 200)
-        )
-
-        window.blit(restart_text, (10, 70))
 
     else:
 
@@ -579,16 +510,7 @@ while game:
                 )
             )
 
-        restart_text = small_font.render(
-            'Press R to restart',
-            True,
-            (255, 255, 255)
-        )
-
-        window.blit(restart_text, (220, 370))
-
     display.update()
     clock.tick(FPS)
 
 quit()
-

@@ -10,7 +10,7 @@ win_width = 680
 win_height = 680
 
 window = display.set_mode((win_width, win_height))
-display.set_caption('Maze - With Sword, Traps and Lives')
+display.set_caption('Maze')
 
 background = Surface((win_width, win_height))
 background.fill((30, 30, 30))
